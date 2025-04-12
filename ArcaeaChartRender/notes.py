@@ -1,4 +1,4 @@
-from .element import Chart, Tap, ArcTap, Hold
+from .element import Chart, Tap, ArcTap, Hold, Arc
 
 class BeatNote:
     def __init__(self) -> None:
@@ -56,6 +56,9 @@ def analyze_notes(chart: Chart, base_bpm: float) -> list[BeatNote]:
     time_points: list[int] = []
     for arc in chart._connected_arc_list: #TODO Suspective: arcs in timing groups ignored?
         if arc.has_head:
+            time_points.append(arc.t1)
+    for arc in chart.get_command_list_for_type(Arc, search_in_timing_group=True, exclude_noinput=True):
+        if arc.color.value == 3 and arc.t1 == arc.t2 and arc.y1 == arc.y2 and not arc.is_skyline:
             time_points.append(arc.t1)
     for note in chart.get_command_list_for_type(Tap, True, True):
         time_points.append(note.t)

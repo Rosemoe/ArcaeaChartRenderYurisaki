@@ -10,6 +10,7 @@
 - Designant skyline & arctap rendering
 - Hide timing group with `noinput` attribute and `hidegroup` command
 - Support for lane notes with floating-number X 
+- Support for scaled ArcTap
 
 ## requirements
 

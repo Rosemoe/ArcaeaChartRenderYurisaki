@@ -184,6 +184,10 @@ class Chart(object):
             list_of_arctap_list = (arc.arctap_list for arc in self.command_list if isinstance(arc, Arc) and arc.skyline_raw_type != AffToken.Value.SkyLine.designant)
             list_in_chart = chain(*list_of_arctap_list)
             combo_in_chart = len_iter(list_in_chart)
+            # scaled arctaps
+            for arc in self.get_command_list_for_type(Arc, exclude_noinput=True):
+                if arc.color.value == 3 and arc.t1 == arc.t2 and arc.y1 == arc.y2 and not arc.is_skyline:
+                    combo_in_chart += 1
         elif type_ is Hold:
             combo_in_chart = self.get_long_note_combo(self.get_command_list_for_type(Hold))
         elif type_ is Arc:
@@ -212,6 +216,10 @@ class Chart(object):
             for note in chain(self._hold_list, self._connected_arc_list)
             if t > note.t1 != note.t2
         )
+        # scaled arctaps
+        for arc in self.get_command_list_for_type(Arc, exclude_noinput=True):
+            if arc.color.value == 3 and arc.t1 == arc.t2 and arc.y1 == arc.y2 and not arc.is_skyline and arc.t1 < t:
+                result += 1
         
         result += sum(
             group.get_total_combo_before(t) for group in self._timing_group_list

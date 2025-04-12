@@ -365,7 +365,20 @@ class Render(object):
         im_arc_green = np.zeros(matrix_size, dtype=np.uint8)
         im_arc_skyline = np.zeros(matrix_size, dtype=np.uint8)
 
+        im_arctap = Image.open(self.theme.arctap_path).convert('RGBA').resize((width_arctap, height_arctap))
         for arc in self._chart.get_command_list_for_type(Arc, search_in_timing_group=True, exclude_noinput=False):
+            if arc.color.value == 3 and arc.t1 == arc.t2 and arc.y1 == arc.y2 and not arc.is_skyline:
+                # scaled arctap
+                x1, z = Coordinate.from_normalized((arc.x1, arc.y1))
+                x2 = Coordinate.from_normalized((arc.x2, arc.y1))[0]
+                actual_arctap_width = abs(x1 - x2)
+                actual_arctap = im_arctap.resize((actual_arctap_width, height_arctap))
+                actual_arctap.putalpha(z)
+                self.im.alpha_composite(
+                    actual_arctap,
+                    (min(x1, x2), Coordinate.from_cartesian(self.h, arc.t1 // resize, height_arctap))
+                )
+                continue
             # create sampling list
             arc_path_list = []
             arc_alpha_list = []
