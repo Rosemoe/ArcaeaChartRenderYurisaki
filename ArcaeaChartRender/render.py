@@ -310,6 +310,8 @@ class Render(object):
         im_tap = Image.open(self.theme.tap_path).convert('RGBA').resize((width_note, height_note))
         for tap in self._chart.get_command_list_for_type(Tap, search_in_timing_group=True, exclude_noinput=False):
             lane = tap.lane
+            if isinstance(lane, float):
+                lane = (lane - 0.125) / 0.25 + 1 # Convert to floating lane index
             x = width_track - width_chart + width_chart_edge + width_gap * (3 * lane - 2) + width_note * (lane - 1)
             t = tap.t // resize
             self.im.alpha_composite(im_tap, (int(x), Coordinate.from_cartesian(self.h, t, height_note)))
@@ -319,6 +321,8 @@ class Render(object):
         im_hold = Image.open(self.theme.hold_path).convert('RGBA').resize((width_hold, height_hold))
         for hold in self._chart.get_command_list_for_type(Hold, search_in_timing_group=True, exclude_noinput=False):
             lane = hold.lane
+            if isinstance(lane, float):
+                lane = (lane - 0.125) / 0.25 + 1 # Convert to floating lane index
             stretched_height_hold = (hold.t2 - hold.t1) // resize
             if not stretched_height_hold:  # t2 == t1
                 continue

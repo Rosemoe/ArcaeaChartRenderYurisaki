@@ -254,7 +254,7 @@ class Note(Command, ABC):
 class Tap(Note):
     """Ground tap."""
 
-    def __init__(self, t: int, lane: float):
+    def __init__(self, t: int, lane: float | int):
         self.t = t
         self.lane = lane
 
@@ -281,7 +281,7 @@ class Hold(LongNote):
     def __init__(
             self,
             t1: int, t2: int,
-            lane: float
+            lane: float | int
     ):
         self.t1 = t1
         self.t2 = t2
