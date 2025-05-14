@@ -28,16 +28,21 @@ class BeatNote:
             self.divide = 1
             return True
         i = 2
+        best_dis = length + time_full_note
+        any_match = False
         while i <= 64:
             t_len = time_full_note / i
             t_dot_len = t_len * 1.5
-            if BeatNote._is_double_equal(length, t_len, threshold):
+            if BeatNote._is_double_equal(length, t_len, threshold) and (not any_match or abs(length - t_len) < best_dis):
                 self.divide = i
-                return True
-            if BeatNote._is_double_equal(length, t_dot_len, threshold):
+                self.has_dot = False
+                any_match = True
+                best_dis = abs(length - t_len)
+            if BeatNote._is_double_equal(length, t_dot_len, threshold) and (not any_match or abs(length - t_dot_len) < best_dis):
                 self.divide = i
                 self.has_dot = True
-                return True
+                any_match = True
+                best_dis = abs(length - t_dot_len)
             if i < 4:
                 i += 1
             elif i < 28:
@@ -48,7 +53,7 @@ class BeatNote:
                 i += 8
             else:
                 i += 1
-        return False
+        return any_match
 
 
 # original implementation from https://github.com/Arcaea-Infinity/Aff2Preview/blob/774b759bab250d6043b2bf6d71971c48593d8513/Aff2Preview/AffTools/AffAnalyzer/Analyzer.cs#L143
