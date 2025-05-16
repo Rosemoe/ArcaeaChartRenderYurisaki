@@ -53,6 +53,9 @@ class BeatNote:
                 i += 8
             else:
                 i += 1
+        if any_match and self.has_dot and self.divide * 2 % 3 == 0:
+            self.divide = self.divide * 2 // 3
+            self.has_dot = False
         return any_match
 
 
