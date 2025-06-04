@@ -15,6 +15,8 @@ __all__ = [
     'Timing', 'Camera', 'SceneControl', 'TimingGroup',
 ]
 
+import numpy as np
+
 from abc import ABC, abstractmethod
 from itertools import chain
 from typing import Union, Optional, Type, TypeVar, Iterator, Iterable
@@ -144,7 +146,7 @@ class Chart(object):
 
     def get_long_note_combo(self, note_list: Iterable['LongNote']) -> int:
         """Return the total combo of given LongNote (Hold or Arc)."""
-        density_factor = self.density_factor
+        density_factor = np.float32(self.density_factor)
         result = 0
 
         for long_note in note_list:
@@ -154,8 +156,11 @@ class Chart(object):
                 continue
             if bpm < 0:
                 bpm = -bpm
-            judge_duration = 60000 / bpm / density_factor if bpm >= 255 else 30000 / bpm / density_factor
-            count = int((end_time - start_time) / judge_duration)
+            duration_base = np.float32(60000 if bpm >= 255 else 30000)
+            bpm = np.float32(bpm)
+            judge_duration = duration_base / bpm / density_factor
+            delta_time = np.float32(end_time - start_time)
+            count = (delta_time / judge_duration).astype(int)
 
             if count <= 1:
                 result += 1
