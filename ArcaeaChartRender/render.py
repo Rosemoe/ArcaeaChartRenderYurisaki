@@ -363,6 +363,7 @@ class Render(object):
         im_arc_red = np.zeros(matrix_size, dtype=np.uint8)
         im_arc_blue = np.zeros(matrix_size, dtype=np.uint8)
         im_arc_green = np.zeros(matrix_size, dtype=np.uint8)
+        im_arc_alpha = None # init later
         im_arc_skyline = np.zeros(matrix_size, dtype=np.uint8)
 
         im_arctap = Image.open(self.theme.arctap_path).convert('RGBA').resize((width_arctap, height_arctap))
@@ -387,10 +388,13 @@ class Render(object):
                 arc_alpha_list.append(z)
             # set parameters
             if not arc.is_skyline:
+                if arc.color == Color.Alpha and not im_arc_alpha:
+                    im_arc_alpha = np.zeros(matrix_size, dtype=np.uint8)
                 im, color = {
                     Color.Red: (im_arc_red, self.theme.arc_red_color),
                     Color.Blue: (im_arc_blue, self.theme.arc_blue_color),
                     Color.Green: (im_arc_green, self.theme.arc_green_color),
+                    Color.Alpha: (im_arc_alpha, self.theme.arc_white_color)
                 }.get(arc.color)
                 thickness = self.theme.thickness_arc
             elif arc.is_skyline:
@@ -406,6 +410,8 @@ class Render(object):
         self.im.alpha_composite(Image.fromarray(im_arc_red))
         self.im.alpha_composite(Image.fromarray(im_arc_blue))
         self.im.alpha_composite(Image.fromarray(im_arc_green))
+        if im_arc_alpha:
+            self.im.alpha_composite(Image.fromarray(im_arc_alpha))
         self.im.alpha_composite(Image.fromarray(im_arc_skyline))
 
     def _add_comment_bpm_change(self):

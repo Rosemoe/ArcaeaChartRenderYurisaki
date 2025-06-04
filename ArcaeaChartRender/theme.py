@@ -63,6 +63,7 @@ class BaseTheme(ABC):
     arc_red_color = (185, 118, 180)  # alternative: (255, 150, 220)
     arc_blue_color = (76, 141, 184)  # alternative: (12, 212, 212)
     arc_green_color = (35, 255, 108)
+    arc_white_color = (220, 220, 220)
     arc_alpha = (0, 0, 0)  # for arc whose color is Color.Alpha (like PRAGMATISM BYD)
     arc_skyline_color = (144, 138, 144)
     arc_skyline_designant_color = (180, 100, 120)
@@ -106,6 +107,7 @@ class LightTheme(BaseTheme):
     arc_red_color = (185, 118, 180)
     arc_blue_color = (76, 141, 184)
     arc_green_color = (35, 255, 108)
+    arc_white_color = (170, 170, 170)
 
 
 class ConflictTheme(BaseTheme):
@@ -129,6 +131,7 @@ class ConflictTheme(BaseTheme):
     arc_red_color = (255, 150, 220)
     arc_blue_color = (12, 212, 212)
     arc_green_color = (35, 255, 108)
+    arc_white_color = (220, 220, 220)
 
 
 class ColorlessTheme(BaseTheme):
@@ -152,3 +155,4 @@ class ColorlessTheme(BaseTheme):
     arc_red_color = (185, 118, 180)
     arc_blue_color = (76, 141, 184)
     arc_green_color = (35, 255, 108)
+    arc_white_color = (170, 170, 170)
