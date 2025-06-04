@@ -11,6 +11,7 @@
 - Hide timing group with `noinput` attribute and `hidegroup` command
 - Support for lane notes with floating-number X 
 - Support for scaled ArcTap
+- Support for white and error arcs
 
 ## requirements
 
