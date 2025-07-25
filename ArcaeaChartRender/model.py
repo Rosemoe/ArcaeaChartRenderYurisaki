@@ -56,3 +56,14 @@ class Song(BaseModel):
     date: int
     version: str
     difficulties: list[Difficulty]
+
+
+class ChartBpmDescriptionItem(BaseModel):
+    bpm: float
+    start_time: int
+    end_time: Optional[int]
+
+
+class ChartBpmDescription(BaseModel):
+    base_bpm_override: Optional[float]
+    items: list[ChartBpmDescriptionItem]

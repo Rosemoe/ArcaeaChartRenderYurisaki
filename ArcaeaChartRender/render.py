@@ -12,7 +12,7 @@ from PIL import Image, ImageDraw
 from .aff.decoder import parse_aff
 from .aff.token import AffToken, Color
 from .element import Tap, Arc, Hold, Timing, ArcTap, SceneControl
-from .model import Song
+from .model import Song, ChartBpmDescription
 from .notes import analyze_notes
 from .theme_local import (
     width_track, height_track_reserved,
@@ -158,13 +158,15 @@ class Sample(object):
 
 class Render(object):
 
-    def __init__(self, aff_path: str, cover_path: str, song: Song, difficulty: int, constant: Optional[float] = None):
+    def __init__(self, aff_path: str, cover_path: str, song: Song, difficulty: int,
+                 constant: Optional[float] = None, bpm_description: Optional[ChartBpmDescription] = None):
         self._aff_path = aff_path
         self._cover_path = cover_path
         self._song = song
         self._difficulty = difficulty
         self._constant = constant
         self._chart = parse_aff(read_file(aff_path))
+        self._bpm_description = bpm_description
 
         # the final height of the chart
         self.h = self._chart.end_time // resize + height_track_reserved
@@ -242,7 +244,7 @@ class Render(object):
                     )  # draw combo before this bar
                 else:  # draw lines for smaller beats
                     self.im.alpha_composite(im_line_bar_small, (x, Coordinate.from_cartesian(self.h, t, width_gap)))
-        resolved_beats = analyze_notes(self._chart, self._song.bpm_base)
+        resolved_beats = analyze_notes(self._chart, self._song.bpm_base, self._bpm_description)
         for beat in resolved_beats:
             text = str(beat.divide) if beat.divide > 0 else ''
             if beat.has_dot:
